@@ -72,8 +72,8 @@ function game:draw()
 	local font = love.graphics.newFont(30)
 	love.graphics.setFont(font)
 	love.graphics.print(tostring(self.bird.score), 10, 10)
-	-- love.graphics.setColor(0.294, 0.412, 0.078)
-	-- love.graphics.rectangle("fill", 0, PlayingAreaHeight, ScreenAreaWidth, ScreenAreaHeight - PlayingAreaHeight)
+	love.graphics.setColor(0.294, 0.412, 0.078)
+	love.graphics.rectangle("fill", 0, PlayingAreaHeight, ScreenAreaWidth, ScreenAreaHeight - PlayingAreaHeight)
 	if self.sm.state == self then
 		self.pauseButton:draw()
 	end
@@ -175,14 +175,14 @@ function game:createPipe()
 		end
 	end
 	function pipe:_calcYup()
-		local a = (-(PlayingAreaHeight - self.spaceHeight) + self.spaceY) / (-PlayingAreaWidth + (PlayingAreaWidth - 50))
-		local b = (PlayingAreaHeight - self.spaceHeight)/(a * PlayingAreaWidth)
+		local yf = self.spaceY + self.spaceHeight
+		local a = (yf - PlayingAreaHeight) / ((PlayingAreaWidth - 50) - PlayingAreaWidth )
+		local b = (PlayingAreaHeight)-(a * PlayingAreaWidth)
 		local height = a * self.x + b
-		if self.spaceY < height then
-			print('spacey '..math.floor(self.spaceY)..' spaceHeight '..math.floor(self.spaceHeight)..' a '..math.floor(a)..' b '..math.floor(b))
+		if yf < height then
 			return height
 		else
-			return self.spaceY
+			return yf
 		end
 	end
 	function pipe:draw()
@@ -193,9 +193,9 @@ function game:createPipe()
 		love.graphics.rectangle(
 			"fill",
 			self.x,
-			spaceYu + self.spaceHeight,
+			spaceYu,
 			self.width,
-			PlayingAreaHeight - spaceYu - self.spaceHeight
+			PlayingAreaHeight
 		)
 	end
 	function pipe:isOut()
